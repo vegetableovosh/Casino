@@ -20,16 +20,21 @@ public class MineSweeper : MonoBehaviour, IntefaceGame
     [SerializeField]
     private TextMeshProUGUI numberOfMinestText;
     public Image[] cells;
-    public int numberOfMines = 1; // Количество мин
+    public int numberOfMines = 2; // Количество мин
+    private int numberOfMinesConst = 0;
     private bool[] mines;
     public GameObject[] rows;
     private int cols = 6; // Количество столбцов
-    private int count;
+    public int count;
     private bool isMine; //220 220 200 255
+    private Button Button_Stop;
+
+    [SerializeField]
+    private AudioClip greenAudio;
 
     public void RunMain()
     {
-
+        Button_Stop = GameObject.Find("Button_Stop").GetComponent<Button>();
         count = 0;
         isMine = false;
         mines = new bool[rows.Length * cols]; // Обновляем массив мин
@@ -42,7 +47,8 @@ public class MineSweeper : MonoBehaviour, IntefaceGame
                 cells[i].sprite = sprites[0];
             }
         }
-
+        Button_Stop.interactable = false;
+        numberOfMinesConst = numberOfMines;
         ActivateNextRow();
 
     }
@@ -50,7 +56,7 @@ public class MineSweeper : MonoBehaviour, IntefaceGame
     void PlaceMines()
     {
         int placedMines = 0;
-        while (placedMines < numberOfMines)
+        while (placedMines < numberOfMinesConst)
         {
             int index = Random.Range(0, cells.Length);
             if (!mines[index])
@@ -63,7 +69,9 @@ public class MineSweeper : MonoBehaviour, IntefaceGame
 
     public void OnCellClick(int index)
     {
-       
+        Button_Stop.interactable = true;
+        this.GetComponent<AudioSource>().PlayOneShot(greenAudio);
+
         // Отображение всех клеток
         for (int i = 0; i < cells.Length; i++)
         {
@@ -101,7 +109,7 @@ public class MineSweeper : MonoBehaviour, IntefaceGame
                 ActivateNextRow();
             else {
                 DeactivateAllCells();
-                BetSum();
+                count++;
             }
         }
     }
@@ -138,12 +146,12 @@ public class MineSweeper : MonoBehaviour, IntefaceGame
 
     public void ChangeMines(int Right)
     {
-        if(0 < numberOfMines && numberOfMines < 6)
+        if(1 < numberOfMines && numberOfMines < 6)
             numberOfMines = Right > 0 ? 
             (numberOfMines+1) > 5 ? 5: numberOfMines+1: 
-            (numberOfMines-1) < 1 ? 1: numberOfMines-1;
+            (numberOfMines-1) < 2 ? 2: numberOfMines-1;
         else
-            numberOfMines = numberOfMines >= 5 ? 5 : 1;
+            numberOfMines = numberOfMines >= 5 ? 5 : 2;
         numberOfMinestText.text = numberOfMines.ToString();
     }
     //добавить декоратор
@@ -168,18 +176,18 @@ public class MineSweeper : MonoBehaviour, IntefaceGame
     }
 
     private float SumX(){
-        float cf = count - 0.5f;
-        float nf = (float)numberOfMines;
-        float x = 1 + ( (nf / 6) * cf);
+        float cf = (count);
+        float nf = (float)numberOfMinesConst;
+        float x =   0.75f + (((cf / 6)) * nf);
         return x;
     }
 
     public void BetSum(){
 
-        if (!isMine)
+        if (!isMine && (count <= 7))
         {
+            count -= 1;
             float x = SumX();
-            Debug.Log(x);
             this.GetComponent<Bet>().Return_rate(x);
         }
         else

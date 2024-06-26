@@ -4,5 +4,20 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: fe42a141e4bca73499d2635c23cae986
+  - enabled: 1
+    path: Assets/Scenes/MineSwepper.unity
+    guid: 52931f7d3dc037a4cacab6cbf0ee0967
+  - enabled: 1
+    path: Assets/Scenes/Plinko.unity
+    guid: 07b721886697c7c4f9ebe938876a0c25
+  - enabled: 1
+    path: Assets/Scenes/Rocket.unity
+    guid: 8c7a8aac299eca74e9dd53f488ad4628
+  - enabled: 1
+    path: Assets/Scenes/Slots.unity
+    guid: bf59172997e51df44bc50a338ff69b15
   m_configObjects: {}

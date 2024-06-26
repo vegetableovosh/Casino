@@ -20,6 +20,7 @@ public class Money : MonoBehaviour
     {
         currentMoney += add;
         PlayerPrefs.SetFloat("Money", currentMoney);
+        GetMoney();
 
     }
 

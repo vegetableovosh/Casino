@@ -8,21 +8,35 @@ public class PlinkoC : MonoBehaviour, IntefaceGame
 {
     public GameObject Ball;
     private int numberOfBalls = 1;
+    private int numberOfBallsRezerv;
     private int DestroyBalls;
+    private Money Balance;
+    private TMP_InputField input;
+    private float timeMoney;
+    private int betAmout;
+
+
     [SerializeField]
     private TextMeshProUGUI numberOfMinestText;
 
 
     public void RunMain()
     {
+        numberOfBallsRezerv = numberOfBalls;
+        input = GameObject.Find("InputField_Bet").GetComponent<TMP_InputField>();
+        Balance = GameObject.Find("ManageBalance").GetComponent<Money>();
+        timeMoney = PlayerPrefs.GetFloat("Money");
+        int.TryParse(input.text, out betAmout);
+        timeMoney -= betAmout * (numberOfBallsRezerv - 1);
+        PlayerPrefs.SetFloat("Money", timeMoney);
+        Balance.GetMoney();
         DestroyBalls = 0;
         StartCoroutine(SpawnObjectAfterDelay(0.5f));   
     }
 
-
     IEnumerator SpawnObjectAfterDelay(float delay)
     {
-        for (int i = 0; i < numberOfBalls; i++)
+        for (int i = 0; i < numberOfBallsRezerv; i++)
         {
             float randomIndex = Random.Range(0.01f, 0.1f);
 
@@ -36,7 +50,7 @@ public class PlinkoC : MonoBehaviour, IntefaceGame
     public void CoutBall()
     {
         DestroyBalls++;
-        if (DestroyBalls >= numberOfBalls)
+        if (DestroyBalls >= numberOfBallsRezerv)
             this.gameObject.GetComponent<StopBet>().Stop();
     }
 

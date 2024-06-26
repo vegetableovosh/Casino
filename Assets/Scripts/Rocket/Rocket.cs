@@ -9,7 +9,6 @@ public class Rocket : MonoBehaviour, IntefaceGame
     private GameObject movingObject; // Объект, который будет двигаться по параболе
     public float speed = 1.0f; // Скорость движения по параболе
     public float amplitude = 1.0f; // Амплитуда параболы
-    public float explosionMinTime = 2.0f; // Минимальное время до взрыва
     public float explosionMaxTime = 10.0f; // Максимальное время до взрыва
     public LineRenderer lineRenderer; // LineRenderer для рисования линии
 
@@ -18,6 +17,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
     private float elapsedTime;
     private float explosionTime;
     private List<Vector3> positions = new List<Vector3>();
+    private RandomCurve random_value;
 
     private Mesh mesh;
     private MeshRenderer meshRenderer;
@@ -29,6 +29,14 @@ public class Rocket : MonoBehaviour, IntefaceGame
     private float targetRotationAngle; // Целевой угол поворота
     private bool isActive = false;
     private TextMeshProUGUI textX;
+    bool isDestroy;
+
+    [SerializeField]
+    private AnimationCurve SizeCurve;
+    float CurveWeightedRandom(AnimationCurve curve)
+    {
+        return curve.Evaluate(Random.value) * explosionMaxTime;
+    }
 
     private void init()
     {
@@ -38,6 +46,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
             ClearLineAndMesh();
         }
         movingObject = Instantiate(RocketPrefab, new Vector3(0, 1, 0), Quaternion.identity);
+        movingObject.name = "Rocket";
         if (movingObject == null)
         {
             Debug.LogError("Moving Object is not assigned.");
@@ -48,7 +57,8 @@ public class Rocket : MonoBehaviour, IntefaceGame
         startPosition = new Vector3(0, 1, 0);
         elapsedTime = 0.0f;
         positions = new List<Vector3>();
-        explosionTime = Random.Range(explosionMinTime, explosionMaxTime);
+        explosionTime = CurveWeightedRandom(SizeCurve);
+        Debug.Log(explosionTime);
         nextRotationChangeTime = rotationChangeInterval;
         rotationChangeInterval = 3.0f;
         currentRotationAngle = -75.0f;
@@ -81,13 +91,15 @@ public class Rocket : MonoBehaviour, IntefaceGame
     {
         init();
         isActive = true;
+        isDestroy = false;
     }
 
     public void StopGame()
     {
-        isActive = false;
-        float x = movingObject != null ? movingObject.transform.position.y : 0;
+        float x = !isDestroy ? movingObject.transform.position.y : 0;
+        Debug.Log(x);
         this.GetComponent<Bet>().Return_rate(x);
+        isActive = false;
     }
 
     void Update()
@@ -137,11 +149,12 @@ public class Rocket : MonoBehaviour, IntefaceGame
 
     void Explode()
     {
+        Destroy(movingObject);
+        isDestroy = true;
+        Debug.Log("Boom! Object exploded.");
         if (isActive)
             this.GetComponentInChildren<StopBet>().Stop();
-        Debug.Log("Boom! Object exploded.");
         isActive = false;
-        Destroy(movingObject);
     }
 
     void UpdateMesh()
@@ -181,6 +194,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
         positions.Clear();
         lineRenderer.positionCount = 0;
         mesh.Clear();
+        Destroy(GameObject.Find("AreaMesh"));
     }
 
     public void ChangeAreaColor(Color newColor)

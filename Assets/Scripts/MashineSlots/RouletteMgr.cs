@@ -18,6 +18,9 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
 
     public Image DispayResultImage;
 
+    [SerializeField]
+    private AudioClip rouleteAudio;
+
     List<int> StartList = new List<int>();
     List<int> ResultIndexList = new List<int>();
     int ItemCnt = 3;
@@ -37,7 +40,7 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
 
         init();
         // Populate StartList with indices.
-        for (int i = 0; i < ItemCnt * Slot.Length; i++)
+        for (int i = 0; i < SkillSprite.Length; i++)
         {
             StartList.Add(i);
         }
@@ -71,7 +74,7 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
                 StartList.RemoveAt(randomIndex);
             }
         }
-
+        this.GetComponent<AudioSource>().PlayOneShot(rouleteAudio);
         // Start slot coroutines.
         for (int i = 0; i < Slot.Length; i++)
         {
@@ -83,6 +86,7 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
 
     int[] answer = { 2, 3, 1 };
 
+    
     IEnumerator StartSlot(int SlotIndex)
     {
         for (int i = 0; i < (ItemCnt * (6 + SlotIndex * 4) + answer[SlotIndex]) * 2; i++)
@@ -90,7 +94,7 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
             SlotSkillObject[SlotIndex].transform.localPosition -= new Vector3(0, 50f, 0);
             if (SlotSkillObject[SlotIndex].transform.localPosition.y < 50f)
                 SlotSkillObject[SlotIndex].transform.localPosition += new Vector3(0, 300f, 0);
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.005f);
         }
         // Enable slot buttons after the slot stops spinning.
         for (int i = 0; i < Slot.Length; i++)
