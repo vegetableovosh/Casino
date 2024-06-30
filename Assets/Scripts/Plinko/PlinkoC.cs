@@ -10,6 +10,7 @@ public class PlinkoC : MonoBehaviour, IntefaceGame
     private int numberOfBalls = 1;
     private int numberOfBallsRezerv;
     private int DestroyBalls;
+    private int currentBallCount;
     private Money Balance;
     private TMP_InputField input;
     private float timeMoney;
@@ -19,8 +20,7 @@ public class PlinkoC : MonoBehaviour, IntefaceGame
     [SerializeField]
     private TextMeshProUGUI numberOfMinestText;
 
-
-    public void RunMain()
+    private void init()
     {
         numberOfBallsRezerv = numberOfBalls;
         input = GameObject.Find("InputField_Bet").GetComponent<TMP_InputField>();
@@ -28,24 +28,47 @@ public class PlinkoC : MonoBehaviour, IntefaceGame
         timeMoney = PlayerPrefs.GetFloat("Money");
         int.TryParse(input.text, out betAmout);
         timeMoney -= betAmout * (numberOfBallsRezerv - 1);
+    }
+
+    public void RunMain()
+    {
+        init();
         PlayerPrefs.SetFloat("Money", timeMoney);
         Balance.GetMoney();
         DestroyBalls = 0;
-        StartCoroutine(SpawnObjectAfterDelay(0.5f));   
+        currentBallCount = 0;
+        InvokeRepeating("SpawnObject", 0f, 0.6f);   
+        //StartCoroutine(SpawnObjectAfterDelay(0.5f));   
     }
 
-    IEnumerator SpawnObjectAfterDelay(float delay)
+private void SpawnObject()
+{
+    if (currentBallCount < numberOfBallsRezerv)
     {
+        float randomIndex = Random.Range(0.01f, 0.1f);
+        Instantiate(Ball, new Vector2(randomIndex, 6.5f), Quaternion.identity);
+        currentBallCount++;
+    }
+    else
+    {
+        CancelInvoke("SpawnObject"); // ÐžÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð²Ñ‹Ð·Ð¾Ð²Ñ‹, ÐºÐ¾Ð³Ð´Ð° Ð²ÑÐµ Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹ ÑÐ¾Ð·Ð´Ð°Ð½Ñ‹
+    }
+}
+
+/*
+    private void SpawnObjects()
+    {
+
         for (int i = 0; i < numberOfBallsRezerv; i++)
         {
             float randomIndex = Random.Range(0.01f, 0.1f);
-
             Instantiate(Ball, new Vector2(randomIndex, 6.5f), Quaternion.identity);
-            // Æäåì óêàçàííîå âðåìÿ
-            yield return new WaitForSeconds(delay);
+
+            //yield return new WaitForSeconds(delay);
         }
-        // Ñîçäàåì îáúåêò â ïîçèöèè ñïàâíåðà ñ åãî ðîòàöèåé
+        
     }
+*/
 
     public void CoutBall()
     {
@@ -65,4 +88,13 @@ public class PlinkoC : MonoBehaviour, IntefaceGame
         numberOfMinestText.text = numberOfBalls.ToString();
     }
 
+
+    public bool PreparationCheck()
+    {
+        init();
+        if((timeMoney - betAmout) > 0)
+            return true;
+        else
+            return false;
+    }
 }

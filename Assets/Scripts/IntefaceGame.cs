@@ -6,10 +6,11 @@ public interface IntefaceGame
 {
     public void BetSum()
     {}
-
     public void StopGame()
     {}
 
-    public void RunMain()
-    {}
+    public void RunMain();
+
+    public bool PreparationCheck()
+    { return true;}
 }

@@ -76,17 +76,78 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
         }
         this.GetComponent<AudioSource>().PlayOneShot(rouleteAudio);
         // Start slot coroutines.
+        iterationsLeft = new int[Slot.Length];
         for (int i = 0; i < Slot.Length; i++)
         {
-            StartCoroutine(StartSlot(i));
+            StartSlotRepeating(i);
+            //StartCoroutine(StartSlot(i));
         }
 
 
     }
 
+    int[] iterationsLeft;
     int[] answer = { 2, 3, 1 };
 
-    
+
+    void StartSlotRepeating(int slotIndex)
+    {
+        int totalIterations = (ItemCnt * (6 + slotIndex * 4) + answer[slotIndex]) * 2;
+        iterationsLeft[slotIndex] = totalIterations;
+        InvokeRepeating($"SpinSlot{slotIndex}", 0f, 0.008f);
+    }
+
+    void SpinSlot0() { SpinSlot(0); }
+    void SpinSlot1() { SpinSlot(1); }
+    void SpinSlot2() { SpinSlot(2); }
+
+    void SpinSlot(int slotIndex)
+    {
+        if (iterationsLeft[slotIndex] > 0)
+        {
+            SlotSkillObject[slotIndex].transform.localPosition -= new Vector3(0, 50f, 0);
+            if (SlotSkillObject[slotIndex].transform.localPosition.y < 50f)
+                SlotSkillObject[slotIndex].transform.localPosition += new Vector3(0, 300f, 0);
+            iterationsLeft[slotIndex]--;
+        }
+        else
+        {
+            CancelInvoke($"SpinSlot{slotIndex}");
+            CheckSlots();
+        }
+    }
+
+    void CheckSlots()
+    {
+        bool allSlotsDone = true;
+        for (int i = 0; i < iterationsLeft.Length; i++)
+        {
+            if (iterationsLeft[i] > 0)
+            {
+                allSlotsDone = false;
+                break;
+            }
+        }
+        if (allSlotsDone)
+        {
+            for (int i = 0; i < Slot.Length; i++)
+            {
+                Slot[i].interactable = true;
+            }
+            if (
+                SlotSkillObject[0].transform.localPosition.y == 100 &&
+                SlotSkillObject[1].transform.localPosition.y == 300 &&
+                SlotSkillObject[2].transform.localPosition.y == 200
+            )
+            {
+                CheckCombination();
+            }
+        }
+    }
+
+
+
+    /*
     IEnumerator StartSlot(int SlotIndex)
     {
         for (int i = 0; i < (ItemCnt * (6 + SlotIndex * 4) + answer[SlotIndex]) * 2; i++)
@@ -109,7 +170,7 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
             SlotSkillObject[2].transform.localPosition.y == 200
            )
             CheckCombination();
-    }
+    }*/
 
 
 
@@ -130,46 +191,33 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
         if (SkillSprite[ResultIndexList[0]].name == SkillSprite[ResultIndexList[1]].name &&
             SkillSprite[ResultIndexList[1]].name == SkillSprite[ResultIndexList[2]].name &&
             SkillSprite[ResultIndexList[2]].name == "melon")
-            x = 20;
+            x = 15;
 
         if (SkillSprite[ResultIndexList[0]].name == SkillSprite[ResultIndexList[1]].name &&
             SkillSprite[ResultIndexList[1]].name == SkillSprite[ResultIndexList[2]].name &&
             SkillSprite[ResultIndexList[2]].name == "cherry")
-            x = 30;
+            x = 20;
 
         if (SkillSprite[ResultIndexList[0]].name == SkillSprite[ResultIndexList[1]].name &&
             SkillSprite[ResultIndexList[1]].name == SkillSprite[ResultIndexList[2]].name &&
             SkillSprite[ResultIndexList[2]].name == "banan")
-            x = 50;
+            x = 30;
 
         if (SkillSprite[ResultIndexList[0]].name == SkillSprite[ResultIndexList[1]].name &&
             SkillSprite[ResultIndexList[1]].name == SkillSprite[ResultIndexList[2]].name &&
             SkillSprite[ResultIndexList[2]].name == "7")
-            x = 100;
+            x = 50;
 
         if (
-            (((SkillSprite[ResultIndexList[0]].name == SkillSprite[ResultIndexList[1]].name) && SkillSprite[ResultIndexList[0]].name == "banan")
-            &&
-            (SkillSprite[ResultIndexList[1]].name != SkillSprite[ResultIndexList[2]].name))
-            ||
             (((SkillSprite[ResultIndexList[0]].name == SkillSprite[ResultIndexList[2]].name) && SkillSprite[ResultIndexList[2]].name == "banan")
             &&
-            (SkillSprite[ResultIndexList[0]].name != SkillSprite[ResultIndexList[1]].name))
-            ||
-            (((SkillSprite[ResultIndexList[1]].name == SkillSprite[ResultIndexList[2]].name) && SkillSprite[ResultIndexList[1]].name == "banan")
-            &&
-            (SkillSprite[ResultIndexList[1]].name != SkillSprite[ResultIndexList[0]].name))
-            )
+            (SkillSprite[ResultIndexList[0]].name != SkillSprite[ResultIndexList[1]].name)))
             x = 7;
 
         if (
             (((SkillSprite[ResultIndexList[0]].name == SkillSprite[ResultIndexList[1]].name) && SkillSprite[ResultIndexList[0]].name == "7")
             &&
             (SkillSprite[ResultIndexList[1]].name != SkillSprite[ResultIndexList[2]].name))
-            ||
-            (((SkillSprite[ResultIndexList[0]].name == SkillSprite[ResultIndexList[2]].name) && SkillSprite[ResultIndexList[2]].name == "7")
-            &&
-            (SkillSprite[ResultIndexList[0]].name != SkillSprite[ResultIndexList[1]].name))
             ||
             (((SkillSprite[ResultIndexList[1]].name == SkillSprite[ResultIndexList[2]].name) && SkillSprite[ResultIndexList[1]].name == "7")
             &&
@@ -185,4 +233,8 @@ public class RouletteMgr : MonoBehaviour, IntefaceGame
     }
 
 
+    public bool PreparationCheck()
+    {
+        return  true;
+    }
 }

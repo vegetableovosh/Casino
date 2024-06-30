@@ -96,17 +96,18 @@ public class Rocket : MonoBehaviour, IntefaceGame
 
     public void StopGame()
     {
-        float x = !isDestroy ? movingObject.transform.position.y : 0;
+        float x = !isDestroy ? movingObject.transform.position.y + (1 * movingObject.transform.position.x ) : 0;
         Debug.Log(x);
         this.GetComponent<Bet>().Return_rate(x);
         isActive = false;
     }
 
-    void Update()
+    private void Update()
     {
         if(isActive){
         MakeNewPosition();
-            textX.text = movingObject.transform.position.y.ToString("#.00" + "X");
+        float textMoving = movingObject.transform.position.y + (1 * movingObject.transform.position.x );
+            textX.text = textMoving.ToString("#.00" + "X");
         if (elapsedTime >= explosionTime || movingObject.transform.position.y >= 8)
         {
             Explode();
@@ -116,7 +117,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
 
     }
 
-    void MakeNewPosition()
+    private void MakeNewPosition()
     {
         if (movingObject == null) return;
 
@@ -133,7 +134,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
         lineRenderer.SetPositions(positions.ToArray());
     }
 
-    void RotateRocket()
+    private void RotateRocket()
     {
         // Обновление угла поворота плавно каждые 5 секунд на 10 градусов
         if (elapsedTime >= nextRotationChangeTime)
@@ -147,7 +148,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
         movingObject.transform.rotation = Quaternion.Euler(0, 0, currentRotationAngle);
     }
 
-    void Explode()
+    private void Explode()
     {
         Destroy(movingObject);
         isDestroy = true;
@@ -157,7 +158,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
         isActive = false;
     }
 
-    void UpdateMesh()
+    private void UpdateMesh()
     {
         if (positions.Count < 2) return;
 
@@ -189,7 +190,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
         mesh.RecalculateNormals();
     }
 
-    public void ClearLineAndMesh()
+    private void ClearLineAndMesh()
     {
         positions.Clear();
         lineRenderer.positionCount = 0;
@@ -197,7 +198,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
         Destroy(GameObject.Find("AreaMesh"));
     }
 
-    public void ChangeAreaColor(Color newColor)
+    private void ChangeAreaColor(Color newColor)
     {
         if (meshRenderer != null)
         {
@@ -205,7 +206,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
         }
     }
 
-    public void ChangeAreaMaterial(Material newMaterial)
+    private void ChangeAreaMaterial(Material newMaterial)
     {
         if (meshRenderer != null)
         {
@@ -213,7 +214,7 @@ public class Rocket : MonoBehaviour, IntefaceGame
         }
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (positions.Count < 2) return;
 
@@ -233,4 +234,6 @@ public class Rocket : MonoBehaviour, IntefaceGame
             //Gizmos.DrawLine(new Vector3(currentPosition.x, 0, currentPosition.z), new Vector3(currentPosition.x, currentPosition.y, currentPosition.z));
         }
     }
+
+
 }

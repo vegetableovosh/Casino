@@ -6,14 +6,14 @@ using UnityEngine;
 public class Bet : MonoBehaviour
 {
     private int betAmout;
-    private float timeMoney;
+    public float timeMoney;
     private Money Balance;
     private TMP_InputField input;
     public GameObject Button_Stop, Button_Bet;
     private IntefaceGame game;
     public InterstitialAd ad;
-    private Canvas canvas; // Ссылка на Canvas
-    public GameObject uiPrefab; // Префаб UI объекта
+    private Canvas canvas; // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Canvas
+    public GameObject uiPrefab; // пїЅпїЅпїЅпїЅпїЅпїЅ UI пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     [SerializeField]
     private AudioClip betAudio;
     private void init()
@@ -30,7 +30,9 @@ public class Bet : MonoBehaviour
     {
         init();
         int.TryParse(input.text, out betAmout);
-        if (timeMoney > 0 && betAmout > 0 && betAmout <= timeMoney)
+        bool isCheck = game.PreparationCheck();
+
+        if (timeMoney > 0 && betAmout > 0 && betAmout <= timeMoney && isCheck)
         {
             this.GetComponent<AudioSource>().PlayOneShot(betAudio);
             input.interactable = false;
@@ -52,21 +54,22 @@ public class Bet : MonoBehaviour
         textObject.text = ix > 0 ? (ix < 1 ? ix.ToString("0.00" + "X") : ix.ToString("#.00" + "X")) : "";
         newUIObject.transform.SetParent(canvas.transform, false);
 
-        // Определяем границы Canvas
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Canvas
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
         RectTransform rectTransform = newUIObject.GetComponent<RectTransform>();
         rectTransform.localScale = new Vector2(ix > 1 ? ((ix /75) + 1.75f) : 1, ix > 1 ? ((ix / 75) + 1.75f) : 1);
 
-        // Задаем случайную позицию внутри ширины Canvas
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Canvas
         float x = Random.Range(canvasRect.rect.xMin + (rectTransform.localScale.x + 220), canvasRect.rect.xMax - (rectTransform.localScale.x + 220));
 
-        // Задаем случайную позицию внутри указанных границ по высоте (-400 до 400)
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (-400 пїЅпїЅ 400)
         float y = Random.Range(-200, 400);
 
-        // Устанавливаем позицию объекта
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         rectTransform.anchoredPosition = new Vector2(x, y);
 
+        timeMoney = PlayerPrefs.GetFloat("Money");
 
 
         int cur;

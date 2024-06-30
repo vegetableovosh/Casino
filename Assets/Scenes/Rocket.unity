@@ -1892,32 +1892,50 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.42254496
-      value: 0.10912187
-      inSlope: 0.4474516
-      outSlope: 0.4474516
+      time: 0.021459214
+      value: 0.28458512
+      inSlope: -0.0031231407
+      outSlope: -0.0031231407
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.8933133
-      value: 0.4218113
-      inSlope: 0.9663982
-      outSlope: 0.9663982
+      time: 0.07194762
+      value: 0.0027953386
+      inSlope: 0.018309202
+      outSlope: 0.018309202
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.5265137
+      outWeight: 0.07322428
     - serializedVersion: 3
-      time: 0.96185094
-      value: 0.69820726
-      inSlope: 9.838169
-      outSlope: 9.838169
+      time: 0.5509187
+      value: 0.030902177
+      inSlope: 0.23099154
+      outSlope: 0.23099154
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.16483584
+    - serializedVersion: 3
+      time: 0.8051507
+      value: 0.1498393
+      inSlope: 0.9448662
+      outSlope: 0.9448662
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.27575222
+    - serializedVersion: 3
+      time: 0.95897335
+      value: 0.54530954
+      inSlope: 6.6187496
+      outSlope: 6.6187496
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.24155581
     - serializedVersion: 3
       time: 1
       value: 1
@@ -1942,6 +1960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e66e35910fd78fdf9f4ad78c5f6f2bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeMoney: 0
   Button_Stop: {fileID: 2408559608074163262}
   Button_Bet: {fileID: 1897216500625598962}
   ad: {fileID: 1852511352}
@@ -1973,7 +1992,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2673,7 +2692,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1852511355}
   - component: {fileID: 1852511354}
-  - component: {fileID: 1852511353}
   - component: {fileID: 1852511352}
   - component: {fileID: 1852511351}
   m_Layer: 0
@@ -2714,18 +2732,6 @@ MonoBehaviour:
   _iOsAdUnitId: Interstitial_iOS
   adMoney: 0
   numberButton: 0
---- !u!114 &1852511353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852511350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eb4ca687f95b4d4da8e984fe3dbbf54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1852511354
 MonoBehaviour:
   m_ObjectHideFlags: 0

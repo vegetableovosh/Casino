@@ -178,7 +178,7 @@ public class MineSweeper : MonoBehaviour, IntefaceGame
     private float SumX(){
         float cf = (count);
         float nf = (float)numberOfMinesConst;
-        float x =   0.75f + (((cf / 6)) * nf);
+        float x =   0.85f + (((cf / 6)) * nf);
         return x;
     }
 
